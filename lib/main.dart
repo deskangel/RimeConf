@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rimeconf/conf_controller.dart';
 import 'package:rimeconf/spinner_title.dart';
+import 'package:rimeconf/tabs/general_tab.dart';
+import 'package:rimeconf/tabs/scheme_list_tab.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,47 +34,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
-  final ConfCtrl ctrl = Get.put(ConfCtrl());
+
+  static const TABS = ['通用', '方案列表'];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Obx(() => Text('Clicked: ${ctrl.count}')),
-      ),
-      body: Column(
-        children: [
-          SpinnerTitle(title: '候选数量', value: 0, values: ['5', '6', '7', '8', '9']),
-          ElevatedButton(
-            onPressed: () => ctrl.readConf(),
-            child: Obx(() => Text('${ctrl.length.value}')),
-          ),
-          GetBuilder<ConfCtrl>(
-            init: ConfCtrl(),
-            builder: (c) {
-              return Text(ctrl.count.toString());
-            },
-          ),
-          Expanded(
-            child: GetBuilder<ConfCtrl>(
-              init: ConfCtrl(),
-              builder: (c) {
-                return ListView.builder(
-                    itemCount: ctrl.length.value,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        title: Text(ctrl.schemeList![index]),
-                        trailing: IconButton(
-                          icon: Icon(Icons.cancel_outlined),
-                          onPressed: () {
-                            ctrl.remove(index);
-                          },
-                        ),
-                      );
-                    });
-              },
+    return DefaultTabController(
+      length: TABS.length,
+      child: Scaffold(
+        body: Column(
+          children: [
+            TabBar(
+              tabs: [
+                for (var tab in TABS) Tab(text: tab),
+              ],
             ),
-          ),
-        ],
+            Expanded(
+              child: TabBarView(
+                children: [
+                  GeneralTab(),
+                  SchemeListTab(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
