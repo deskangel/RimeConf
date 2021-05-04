@@ -18,29 +18,29 @@ class ConfCtrl extends GetxController {
   RxInt get length => schemeList?.length.obs ?? 0.obs;
 
   void readConf() {
-    String? home = '';
+
+
+    // var dir = Directory('$home/.config/ibus/rime/');
+    // var path = join(dir.path, 'default.custom.yaml');
+    // var content = File(path).readAsStringSync();
+    // var doc = loadYaml(content);
+
+    // logger.d(jsonEncode(doc));
+
+    schemeList = SchemeConf().load();
+    refresh();
+  }
+
+  String? getHomePath() {
+    String? home;
     var env = Platform.environment;
-    if (Platform.isLinux) {
+    if (Platform.isLinux || Platform.isMacOS) {
       home = env['HOME'];
     } else {
       throw ('not implemented.');
     }
 
-    var dir = Directory('$home/.config/ibus/rime/');
-    var path = join(dir.path, 'default.custom.yaml');
-    var content = File(path).readAsStringSync();
-    var doc = loadYaml(content);
-
-    logger.d(jsonEncode(doc));
-
-    // length = RxInt(2);
-    // length++;
-
-    schemeList = SchemeConf().load();
-    refresh();
-    // update();
-    // _length = schemeList!.length.obs;
-    // schemeList?.refresh();
+    return home;
   }
 }
 
