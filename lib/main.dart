@@ -59,7 +59,15 @@ class _HomePage extends State<HomePage> {
                 return ListView.builder(
                     itemCount: ctrl.length.value,
                     itemBuilder: (BuildContext context, int index) {
-                      return ListTile(title: Obx(() => Text(ctrl.schemeList![index])));
+                      return ListTile(
+                        title: Text(ctrl.schemeList![index]),
+                        trailing: IconButton(
+                          icon: Icon(Icons.cancel_outlined),
+                          onPressed: () {
+                            ctrl.remove(index);
+                          },
+                        ),
+                      );
                     });
               },
             ),

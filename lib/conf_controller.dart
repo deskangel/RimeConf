@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:yaml/yaml.dart';
 
-import 'log_helper.dart';
+import 'scheme_conf.dart';
 
 class ConfCtrl extends GetxController {
   var count = 0.obs;
@@ -27,7 +24,8 @@ class ConfCtrl extends GetxController {
 
     // logger.d(jsonEncode(doc));
 
-    schemeList = SchemeConf().load();
+    var schemeConf = SchemeConf()..load();
+    schemeList =   schemeConf.schemeList;
     refresh();
   }
 
@@ -42,19 +40,11 @@ class ConfCtrl extends GetxController {
 
     return home;
   }
-}
 
-class SchemeConf {
-  RxList<String> load() {
-    var dir = Directory('/usr/share/rime-data/');
-    var content = File(join(dir.path, 'default.yaml')).readAsStringSync();
-    var doc = loadYaml(content);
-
-    RxList<String> list = RxList();
-    for (var item in doc['schema_list']) {
-      list.add(item.values.first);
-    }
-
-    return list;
+  void remove(int index) {
+    this.schemeList?.removeAt(index);
+    refresh();
   }
 }
+
+
