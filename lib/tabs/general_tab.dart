@@ -17,8 +17,11 @@ class _GeneralTabState extends State<GeneralTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SpinnerTitle(title: '候选数量', value: 0, values: ['5', '6', '7', '8', '9']),
-          Text('切换'),
-          SwitchListTile(title: Text('全角'), value: true, onChanged: (value){}),
+          Text(
+            '切换',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SwitchListTile(title: Text('全角'), value: true, onChanged: (value) {}),
         ],
       ),
     );

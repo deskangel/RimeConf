@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rimeconf/conf_controller.dart';
+import 'package:rimeconf/schema_conf.dart';
 
-class SchemeListTab extends StatefulWidget {
-  SchemeListTab({Key? key}) : super(key: key);
+import 'package:rimeconf/schema_detail_page.dart';
+
+class SchemaListTab extends StatefulWidget {
+  SchemaListTab({Key? key}) : super(key: key);
 
   @override
-  _SchemeListTabState createState() => _SchemeListTabState();
+  _SchemaListTabState createState() => _SchemaListTabState();
 }
 
-class _SchemeListTabState extends State<SchemeListTab> {
-  final ConfCtrl ctrl = Get.put(ConfCtrl());
+class _SchemaListTabState extends State<SchemaListTab> {
+  // final ConfCtrl ctrl = Get.put(ConfCtrl());
+  final SchemaConf ctrl = SchemaConf();
 
   @override
   void initState() {
     super.initState();
-    ctrl.readConf();
+    ctrl.load();
   }
 
   @override
@@ -30,24 +33,35 @@ class _SchemeListTabState extends State<SchemeListTab> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           Expanded(
-            child: GetBuilder<ConfCtrl>(
-              init: ConfCtrl(),
+            child: GetBuilder<SchemaConf>(
+              init: ctrl,
               builder: (c) {
+                var schemaList = ctrl.schemeList;
                 return ListView.separated(
                   shrinkWrap: true,
                   separatorBuilder: (_, __) => Divider(),
-                  itemCount: ctrl.length.value,
+                  itemCount: schemaList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    var scheme = ctrl.schemeList![index];
-                    return SwitchListTile(
+                    var schema = schemaList[index];
+                    return ListTile(
                       dense: true,
-                      title: Text(scheme.name, style: TextStyle(fontSize: 16)), value: scheme.active,
-                      onChanged: (bool value) {
-                        setState(() {
-                          scheme.active = value;
-                        });
+                      title: Text(schema.name, style: TextStyle(fontSize: 16)),
+                      trailing: Switch(
+                        value: schema.active,
+                        onChanged: (bool value) {
+                          setState(() {
+                            schema.active = value;
+                          });
+                        },
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SchemeDetailPage(schema: schema,),
+                          ),
+                        );
                       },
-
                     );
                   },
                 );

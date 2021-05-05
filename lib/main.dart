@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:rimeconf/conf_controller.dart';
-import 'package:rimeconf/spinner_title.dart';
 import 'package:rimeconf/tabs/general_tab.dart';
 import 'package:rimeconf/tabs/scheme_list_tab.dart';
 
@@ -52,7 +49,7 @@ class _HomePage extends State<HomePage> {
               child: TabBarView(
                 children: [
                   GeneralTab(),
-                  SchemeListTab(),
+                  SchemaListTab(),
                 ],
               ),
             ),
