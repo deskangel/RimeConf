@@ -7,13 +7,6 @@ import 'package:path/path.dart';
 
 import 'log_helper.dart';
 
-// class SchemeList {
-//   final String name;
-//   bool active;
-
-//   SchemeList(this.name, {this.active: true});
-// }
-
 class Switcher {
   final String name;
   final String states;
