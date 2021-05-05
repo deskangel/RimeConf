@@ -11,6 +11,16 @@ class GeneralTab extends StatefulWidget {
 class _GeneralTabState extends State<GeneralTab> {
   @override
   Widget build(BuildContext context) {
-    return SpinnerTitle(title: '候选数量', value: 0, values: ['5', '6', '7', '8', '9']);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SpinnerTitle(title: '候选数量', value: 0, values: ['5', '6', '7', '8', '9']),
+          Text('切换'),
+          SwitchListTile(title: Text('全角'), value: true, onChanged: (value){}),
+        ],
+      ),
+    );
   }
 }

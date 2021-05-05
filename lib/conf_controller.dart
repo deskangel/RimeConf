@@ -10,7 +10,7 @@ class ConfCtrl extends GetxController {
     count = 2.obs;
     refresh();
   }
-  RxList<String>? schemeList;
+  RxList<SchemeList>? schemeList;
   // var length = 0.obs;
   RxInt get length => schemeList?.length.obs ?? 0.obs;
 
