@@ -6,13 +6,18 @@ import 'package:flutter/material.dart';
 class SpinnerTitle extends StatefulWidget {
   final String title;
   final String? subtitle;
-  final int? value;
-  final int? min;
-  final int? max;
-  final int step;
+
+  late final int? value;
+
+  final int min;
+  late final int max;
+  late final int? step;
+
+  late final int initIndex;
+  late final List<String> values;
+
   final Widget? left;
   final Widget? right;
-  final List<String>? values;
   final TextStyle? labelStyle;
   final Function? onChanged;
 
@@ -20,18 +25,32 @@ class SpinnerTitle extends StatefulWidget {
     Key? key,
     required this.title,
     this.subtitle,
-    this.value,
-    this.min,
-    this.max,
+    required this.value,
+    this.min: 0,
+    required this.max,
     this.step: 1,
     this.left,
     this.right,
-    this.values,
     this.labelStyle,
     this.onChanged,
-  })  : assert(!(max == null && values == null), 'max and values cannot be null at the same time.'),
-        assert(!(value == null && values == null), 'value and values cannot be null at the same time.'),
-        super(key: key);
+  }) : super(key: key);
+
+  SpinnerTitle.list({
+    Key? key,
+    required this.title,
+    this.subtitle,
+    required this.initIndex,
+    this.left,
+    this.right,
+    required this.values,
+    this.labelStyle,
+    this.onChanged,
+  })  : min = 0,
+        super(key: key) {
+    max = this.values.length - 1;
+    this.step = 1;
+    this.value = null;
+  }
 
   @override
   _SpinnerTitleState createState() => _SpinnerTitleState();
@@ -39,16 +58,17 @@ class SpinnerTitle extends StatefulWidget {
 
 class _SpinnerTitleState extends State<SpinnerTitle> {
   late dynamic value;
-  late int min;
-  late int max;
+  late int index;
+  late final bool useList;
 
   @override
   void initState() {
     super.initState();
 
-    value = widget.value ?? widget.values![0];
-    min = widget.min ?? 0;
-    max = widget.max ?? (widget.values!.length - 1);
+    useList = (widget.value == null);
+
+    value = widget.value ?? widget.values[widget.initIndex];
+    index = widget.initIndex;
   }
 
   @override
@@ -91,12 +111,25 @@ class _SpinnerTitleState extends State<SpinnerTitle> {
                 ),
               ),
               onPressed: () {
-                if (value > min) {
-                  setState(() {
-                    value--;
-                  });
-                  if (widget.onChanged != null) {
-                    widget.onChanged!(value);
+                if (!useList) {
+                  if (value > widget.min) {
+                    setState(() {
+                      value--;
+                    });
+
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
+                  }
+                } else {
+                  if (index > widget.min) {
+                    index--;
+                    setState(() {
+                      value = widget.values[index];
+                    });
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
                   }
                 }
               },
@@ -140,12 +173,25 @@ class _SpinnerTitleState extends State<SpinnerTitle> {
                 ),
               ),
               onPressed: () {
-                if (value < max) {
-                  setState(() {
-                    value++;
-                  });
-                  if (widget.onChanged != null) {
-                    widget.onChanged!(value);
+                if (!useList) {
+                  if (value < widget.max) {
+                    setState(() {
+                      value++;
+                    });
+
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
+                  }
+                } else {
+                  if (index < widget.max) {
+                    index++;
+                    setState(() {
+                      value = widget.values[index];
+                    });
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(value);
+                    }
                   }
                 }
               },
