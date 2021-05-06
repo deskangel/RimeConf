@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rimeconf/schema_conf.dart';
 import 'package:rimeconf/tabs/general_tab.dart';
 import 'package:rimeconf/tabs/scheme_list_tab.dart';
 
@@ -31,6 +32,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  final SchemaConf schemaConf = SchemaConf();
 
   static const TABS = ['通用', '方案列表'];
   @override
@@ -48,8 +50,8 @@ class _HomePage extends State<HomePage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  GeneralTab(),
-                  SchemaListTab(),
+                  GeneralTab(schemaConf: schemaConf,),
+                  SchemaListTab(schemaConf: schemaConf,),
                 ],
               ),
             ),

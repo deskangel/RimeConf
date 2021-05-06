@@ -5,19 +5,20 @@ import 'package:rimeconf/schema_conf.dart';
 import 'package:rimeconf/schema_detail_page.dart';
 
 class SchemaListTab extends StatefulWidget {
-  SchemaListTab({Key? key}) : super(key: key);
+  final SchemaConf schemaConf;
+
+  SchemaListTab({Key? key, required this.schemaConf}) : super(key: key);
 
   @override
   _SchemaListTabState createState() => _SchemaListTabState();
 }
 
 class _SchemaListTabState extends State<SchemaListTab> {
-  // final ConfCtrl ctrl = Get.put(ConfCtrl());
-  final SchemaConf ctrl = SchemaConf();
-
+  late final SchemaConf ctrl;
   @override
   void initState() {
     super.initState();
+    ctrl = widget.schemaConf;
     ctrl.load();
   }
 

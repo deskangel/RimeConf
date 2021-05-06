@@ -48,9 +48,18 @@ class Schema extends GetxController {
 }
 
 class SchemaConf extends GetxController {
-  RxList<Schema> _schemeList = RxList();
+  static const List<String> SWITCH_KEYS = ['屏蔽', '编码字符上屏后切换至英文', '候选文字上屏后切换至英文', '临时输入后自动复位为中文'];
 
+  RxList<Schema> _schemeList = RxList();
   RxList<Schema> get schemeList => _schemeList;
+
+  var _pageSize = 5.obs;
+
+  int get pageSize => _pageSize.value;
+
+  set pageSize(int value) {
+    _pageSize = value.obs;
+  }
 
   void load() {
     var dir = Directory('/usr/share/rime-data/');
@@ -62,5 +71,13 @@ class SchemaConf extends GetxController {
       _schemeList.add(Schema(item.values.first));
     }
     refresh();
+  }
+
+  void save() {
+    String doc = '''
+path:
+  menu:
+    page_size:
+    ''';
   }
 }
