@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:rimeconf/schema_conf.dart';
+import 'package:rimeconf/tabs/switcher_tab.dart';
+
+import 'tabs/pinyin_mode_tab.dart';
 
 class SchemeDetailPage extends StatefulWidget {
   final Schema schema;
@@ -11,6 +13,8 @@ class SchemeDetailPage extends StatefulWidget {
 }
 
 class _SchemeDetailPageState extends State<SchemeDetailPage> {
+  static const TABS = ['切换列表', '拼音模式'];
+
   @override
   void initState() {
     super.initState();
@@ -20,42 +24,21 @@ class _SchemeDetailPageState extends State<SchemeDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.schema.name),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return DefaultTabController(
+      length: TABS.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.schema.name),
+          bottom: TabBar(
+            tabs: [
+              for (var tab in TABS) Tab(text: tab),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            Text(
-              '切换列表',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Expanded(
-              child: GetBuilder<Schema>(
-                init: widget.schema,
-                builder: (c) {
-                  var schema = widget.schema;
-                  return ListView.separated(
-                      itemBuilder: (context, index) {
-                        var _switch = schema.switches[index];
-                        return SwitchListTile(
-                          value: _switch.reset,
-                          onChanged: (value) {
-                            setState(() {
-                              _switch.reset = value;
-                            });
-                          },
-                          title: Text(_switch.name),
-                        );
-                      },
-                      separatorBuilder: (_, __) => Divider(),
-                      itemCount: schema.switches.length);
-                },
-              ),
-            ),
+            SwitcherTab(schema: widget.schema),
+            PinyinModeTab(),
           ],
         ),
       ),
