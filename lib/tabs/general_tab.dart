@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rimeconf/spinner_title.dart';
+import 'package:rimeconf/utils/dropdown_listtile.dart';
 
 class GeneralTab extends StatefulWidget {
   GeneralTab({Key? key}) : super(key: key);
@@ -17,23 +18,19 @@ class _GeneralTabState extends State<GeneralTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SpinnerTitle(title: '候选数量', value: 0, values: ['5', '6', '7', '8', '9']),
+          SpinnerTitle(title: '每页候选数量', value: 0, values: ['5', '6', '7', '8', '9']),
           Text(
-            '切换',
+            '按键切换策略',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          ListTile(
-            title: Text('按键策略：'),
-            trailing: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                value: switchKey[0],
-                items: switchKey.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-                onChanged: (value) {},
-              ),
-            ),
-          ),
+          DropdownListTile(items: switchKey, title: 'Caps_Lock', onChange: (v) {}),
+          DropdownListTile(items: switchKey, title: 'Shift_l', onChange: (v) {}),
+          DropdownListTile(items: switchKey, title: 'Shift_R', onChange: (v) {}),
+          DropdownListTile(items: switchKey, title: 'Control_L', onChange: (v) {}),
+          DropdownListTile(items: switchKey, title: 'Control_R', onChange: (v) {}),
         ],
       ),
     );
   }
 }
+

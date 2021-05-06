@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:rimeconf/utils.dart';
+import 'package:rimeconf/utils/utils.dart';
 import 'package:yaml/yaml.dart';
 import 'package:path/path.dart';
 
-import 'log_helper.dart';
+import 'utils/log_helper.dart';
 
 class Switcher {
   final String name;
