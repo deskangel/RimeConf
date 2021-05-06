@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class SpinnerTitle extends StatefulWidget {
   final String title;
   final String? subtitle;
-  final int value;
+  final int? value;
   final int? min;
   final int? max;
   final int step;
@@ -20,7 +20,7 @@ class SpinnerTitle extends StatefulWidget {
     Key? key,
     required this.title,
     this.subtitle,
-    required this.value,
+    this.value,
     this.min,
     this.max,
     this.step: 1,
@@ -30,6 +30,7 @@ class SpinnerTitle extends StatefulWidget {
     this.labelStyle,
     this.onChanged,
   })  : assert(!(max == null && values == null), 'max and values cannot be null at the same time.'),
+        assert(!(value == null && values == null), 'value and values cannot be null at the same time.'),
         super(key: key);
 
   @override
@@ -37,7 +38,7 @@ class SpinnerTitle extends StatefulWidget {
 }
 
 class _SpinnerTitleState extends State<SpinnerTitle> {
-  late int value;
+  late dynamic value;
   late int min;
   late int max;
 
@@ -45,7 +46,7 @@ class _SpinnerTitleState extends State<SpinnerTitle> {
   void initState() {
     super.initState();
 
-    value = widget.value;
+    value = widget.value ?? widget.values![0];
     min = widget.min ?? 0;
     max = widget.max ?? (widget.values!.length - 1);
   }
@@ -105,7 +106,7 @@ class _SpinnerTitleState extends State<SpinnerTitle> {
             // color: Colors.green,
             width: 30,
             child: Text(
-              widget.values == null ? value.toString() : widget.values![value],
+              value.toString(),
               textAlign: TextAlign.center,
               style: widget.labelStyle,
             ),
