@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -50,12 +51,30 @@ class Schema extends GetxController {
 class SchemaConf extends GetxController {
   static const List<String> SWITCH_KEYS = ['屏蔽', '编码字符上屏后切换至英文', '候选文字上屏后切换至英文', '临时输入后自动复位为中文'];
 
-  RxList<Schema> _schemeList = RxList();
-  RxList<Schema> get schemeList => _schemeList;
+  RxList<Schema> _schemaList = RxList();
+  RxList<Schema> get schemeList => _schemaList;
 
   var _pageSize = 5.obs;
-
   int get pageSize => _pageSize.value;
+
+  Map<String, String> switchKeys = {
+    'Caps_Lock': 'noop',
+    'Shift_L': 'commit_code',
+    'Shift_R': 'commit_code',
+    'Control_L': 'noop',
+    'Control_R': 'noop',
+  };
+  setSwitchkey(String key, String value) {
+    if (value == SWITCH_KEYS[0]) {
+      switchKeys[key] = 'noop';
+    } else if (value == SWITCH_KEYS[1]) {
+      switchKeys[key] = 'commit_code';
+    } else if (value == SWITCH_KEYS[2]) {
+      switchKeys[key] = 'commit_text';
+    } else if (value == SWITCH_KEYS[3]) {
+      switchKeys[key] = 'inline_ascii';
+    }
+  }
 
   set pageSize(int value) {
     _pageSize = value.obs;
@@ -67,17 +86,36 @@ class SchemaConf extends GetxController {
     var doc = loadYaml(content);
 
     // schema list
+    _schemaList.clear();
     for (var item in doc['schema_list']) {
-      _schemeList.add(Schema(item.values.first));
+      _schemaList.add(Schema(item.values.first));
     }
     refresh();
   }
 
   void save() {
+    String usedSchemaList = '';
+    for (var item in _schemaList) {
+      if (item.active) {
+        usedSchemaList += '      - schema: ${item.name}\n';
+      }
+    }
+
+    String switchKeysString = '';
+    for (var item in switchKeys.entries) {
+      switchKeysString += '        ${item.key}: ${item.value}\n';
+    }
+
     String doc = '''
 path:
   menu:
-    page_size:
+    page_size: $_pageSize
+    schema_list:
+$usedSchemaList
+    ascii_composer:
+      switch_key:
+$switchKeysString
     ''';
+    logger.i(doc);
   }
 }

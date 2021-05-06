@@ -39,11 +39,22 @@ class _GeneralTabState extends State<GeneralTab> {
             '按键切换策略',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          DropdownListTile(items: SchemaConf.SWITCH_KEYS, title: 'Caps_Lock', onChange: (v) {}),
-          DropdownListTile(items: SchemaConf.SWITCH_KEYS, title: 'Shift_l', onChange: (v) {}),
-          DropdownListTile(items: SchemaConf.SWITCH_KEYS, title: 'Shift_R', onChange: (v) {}),
-          DropdownListTile(items: SchemaConf.SWITCH_KEYS, title: 'Control_L', onChange: (v) {}),
-          DropdownListTile(items: SchemaConf.SWITCH_KEYS, title: 'Control_R', onChange: (v) {}),
+          DropdownListTile(
+              items: SchemaConf.SWITCH_KEYS, title: 'Caps_Lock', onChange: (v) => ctrl.setSwitchkey('Caps_Lock', v)),
+          DropdownListTile(
+              items: SchemaConf.SWITCH_KEYS, title: 'Shift_L', onChange: (v) => ctrl.setSwitchkey('Shift_L', v)),
+          DropdownListTile(
+              items: SchemaConf.SWITCH_KEYS, title: 'Shift_R', onChange: (v) => ctrl.setSwitchkey('Shift_R', v)),
+          DropdownListTile(
+              items: SchemaConf.SWITCH_KEYS, title: 'Control_L', onChange: (v) => ctrl.setSwitchkey('Control_L', v)),
+          DropdownListTile(
+              items: SchemaConf.SWITCH_KEYS, title: 'Control_R', onChange: (v) => ctrl.setSwitchkey('Control_R', v)),
+          Divider(),
+          ElevatedButton(
+              onPressed: () {
+                ctrl.save();
+              },
+              child: Text('save')),
         ],
       ),
     );
