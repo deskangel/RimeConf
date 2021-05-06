@@ -9,6 +9,7 @@ class GeneralTab extends StatefulWidget {
 }
 
 class _GeneralTabState extends State<GeneralTab> {
+  static const List<String> switchKey = ['屏蔽', '编码字符上屏后切换至英文', '候选文字上屏后切换至英文', '临时输入后自动复位为中文'];
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -21,7 +22,16 @@ class _GeneralTabState extends State<GeneralTab> {
             '切换',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          SwitchListTile(title: Text('全角'), value: true, onChanged: (value) {}),
+          ListTile(
+            title: Text('按键策略：'),
+            trailing: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                value: switchKey[0],
+                items: switchKey.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                onChanged: (value) {},
+              ),
+            ),
+          ),
         ],
       ),
     );
