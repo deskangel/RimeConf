@@ -285,7 +285,7 @@ class SchemaConf extends GetxController {
 
     String switchKeysString = '';
     for (var item in switchKeys.entries) {
-      switchKeysString += '      ${item.key}: ${item.value}\n';
+      switchKeysString += '        ${item.key}: ${item.value}\n';
     }
 
     String doc = '''
