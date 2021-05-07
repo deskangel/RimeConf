@@ -33,27 +33,30 @@ class _GeneralTabState extends State<GeneralTab> {
             values: ['5', '6', '7', '8', '9'],
             onChanged: (v) {
               ctrl.pageSize = v;
+              ctrl.save();
             },
           ),
           Text(
             '按键切换策略',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-
           for (var item in ctrl.switchKeys.entries)
             DropdownListTile(
               title: item.key,
               items: SchemaConf.SWITCH_KEYS,
               initValue: ctrl.convertSwitchKeyString(item.value),
-              onChange: (v) => ctrl.setSwitchkey(item.key, v),
-            ),
-
-          Divider(),
-          ElevatedButton(
-              onPressed: () {
+              onChange: (v) {
+                ctrl.setSwitchkey(item.key, v);
                 ctrl.save();
               },
-              child: Text('save')),
+            ),
+          // Divider(),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     ctrl.save();
+          //   },
+          //   child: Text('save'),
+          // ),
         ],
       ),
     );

@@ -52,6 +52,7 @@ class _SchemaListTabState extends State<SchemaListTab> {
                           setState(() {
                             schema.active = value;
                           });
+                          ctrl.save();
                         },
                       ),
                       onTap: () {

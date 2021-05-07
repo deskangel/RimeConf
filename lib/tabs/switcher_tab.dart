@@ -26,6 +26,7 @@ class _SwitcherTabState extends State<SwitcherTab> {
                   setState(() {
                     _switch.reset = value;
                   });
+                  widget.schema.save();
                 },
                 title: Text(_switch.states),
                 subtitle: Text(_switch.name),
