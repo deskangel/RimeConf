@@ -34,6 +34,12 @@ class HomePage extends StatefulWidget {
 class _HomePage extends State<HomePage> {
   final SchemaConf schemaConf = SchemaConf();
 
+  @override
+  void initState() {
+    super.initState();
+    schemaConf.load();
+  }
+
   static const TABS = ['通用', '方案列表'];
   @override
   Widget build(BuildContext context) {

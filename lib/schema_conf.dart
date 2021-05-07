@@ -27,7 +27,7 @@ class Schema extends GetxController {
 
   RxList<Switcher> get switches => _switches;
 
-  Schema(this.name, {this.active: true}) {
+  Schema(this.name, {this.active: false}) {
     _pathDefault = join(DEFAULT_DIR, '${this.name}.schema.yaml');
 
     var home = getHomePath();
@@ -81,8 +81,14 @@ class SchemaConf extends GetxController {
   }
 
   void load() {
-    var dir = Directory('/usr/share/rime-data/');
-    var content = File(join(dir.path, 'default.yaml')).readAsStringSync();
+    _loadDefault();
+    _loadCustom();
+    refresh();
+  }
+
+  void _loadDefault() {
+    var dir = '/usr/share/rime-data/';
+    var content = File(join(dir, 'default.yaml')).readAsStringSync();
     var doc = loadYaml(content);
 
     // schema list
@@ -90,32 +96,55 @@ class SchemaConf extends GetxController {
     for (var item in doc['schema_list']) {
       _schemaList.add(Schema(item.values.first));
     }
-    refresh();
+  }
+
+  void _loadCustom() {
+    var dir = '${getHomePath()!}/.config/ibus/rime/';
+    var file = File(join(dir, 'd.custom.yaml'));
+    if (!file.existsSync()) {
+      return;
+    }
+
+    var content = file.readAsStringSync();
+    var doc = loadYaml(content)['patch'];
+    if (doc == null) {
+      return;
+    }
+
+    for (var item in doc['schema_list']) {
+      _schemaList.where((scheme) => scheme.name == item.values.first).first.active = true;
+    }
   }
 
   void save() {
     String usedSchemaList = '';
     for (var item in _schemaList) {
       if (item.active) {
-        usedSchemaList += '      - schema: ${item.name}\n';
+        usedSchemaList += '    - schema: ${item.name}\n';
       }
     }
 
     String switchKeysString = '';
     for (var item in switchKeys.entries) {
-      switchKeysString += '        ${item.key}: ${item.value}\n';
+      switchKeysString += '      ${item.key}: ${item.value}\n';
     }
 
     String doc = '''
-path:
+patch:
   menu:
     page_size: $_pageSize
-    schema_list:
+  schema_list:
 $usedSchemaList
-    ascii_composer:
+  ascii_composer:
+      good_old_caps_lock: true
       switch_key:
 $switchKeysString
     ''';
     logger.i(doc);
+
+    var dir = '${getHomePath()!}/.config/ibus/rime/';
+
+    var file = File(join(dir, 'd.custom.yaml'));
+    file.writeAsStringSync(doc);
   }
 }

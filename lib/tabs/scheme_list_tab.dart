@@ -19,7 +19,6 @@ class _SchemaListTabState extends State<SchemaListTab> {
   void initState() {
     super.initState();
     ctrl = widget.schemaConf;
-    ctrl.load();
   }
 
   @override
