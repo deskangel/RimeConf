@@ -28,27 +28,26 @@ class _GeneralTabState extends State<GeneralTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SpinnerTitle.list(
-            initIndex: 0,
+            initIndex: SchemaConf.CANDIDATE_COUNT.indexOf(ctrl.pageSize),
             title: '每页候选数量',
             values: ['5', '6', '7', '8', '9'],
             onChanged: (v) {
-              ctrl.pageSize = int.parse(v);
+              ctrl.pageSize = v;
             },
           ),
           Text(
             '按键切换策略',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          DropdownListTile(
-              items: SchemaConf.SWITCH_KEYS, title: 'Caps_Lock', onChange: (v) => ctrl.setSwitchkey('Caps_Lock', v)),
-          DropdownListTile(
-              items: SchemaConf.SWITCH_KEYS, title: 'Shift_L', onChange: (v) => ctrl.setSwitchkey('Shift_L', v)),
-          DropdownListTile(
-              items: SchemaConf.SWITCH_KEYS, title: 'Shift_R', onChange: (v) => ctrl.setSwitchkey('Shift_R', v)),
-          DropdownListTile(
-              items: SchemaConf.SWITCH_KEYS, title: 'Control_L', onChange: (v) => ctrl.setSwitchkey('Control_L', v)),
-          DropdownListTile(
-              items: SchemaConf.SWITCH_KEYS, title: 'Control_R', onChange: (v) => ctrl.setSwitchkey('Control_R', v)),
+
+          for (var item in ctrl.switchKeys.entries)
+            DropdownListTile(
+              title: item.key,
+              items: SchemaConf.SWITCH_KEYS,
+              initValue: ctrl.convertSwitchKeyString(item.value),
+              onChange: (v) => ctrl.setSwitchkey(item.key, v),
+            ),
+
           Divider(),
           ElevatedButton(
               onPressed: () {

@@ -50,12 +50,16 @@ class Schema extends GetxController {
 
 class SchemaConf extends GetxController {
   static const List<String> SWITCH_KEYS = ['屏蔽', '编码字符上屏后切换至英文', '候选文字上屏后切换至英文', '临时输入后自动复位为中文'];
+  static const List<String> CANDIDATE_COUNT = ['5', '6', '7', '8', '9'];
 
   RxList<Schema> _schemaList = RxList();
   RxList<Schema> get schemeList => _schemaList;
 
-  var _pageSize = 5.obs;
-  int get pageSize => _pageSize.value;
+  var _pageSize = CANDIDATE_COUNT[0].obs;
+  String get pageSize => _pageSize.value;
+  set pageSize(String value) {
+    _pageSize = value.obs;
+  }
 
   Map<String, String> switchKeys = {
     'Caps_Lock': 'noop',
@@ -76,8 +80,19 @@ class SchemaConf extends GetxController {
     }
   }
 
-  set pageSize(int value) {
-    _pageSize = value.obs;
+  String convertSwitchKeyString(String value) {
+    switch (value) {
+      case 'noop':
+        return '屏蔽';
+      case 'commit_code':
+        return '编码字符上屏后切换至英文';
+      case 'commit_text':
+        return '候选文字上屏后切换至英文';
+      case 'inline_ascii':
+        return '临时输入后自动复位为中文';
+      default:
+        return '屏蔽';
+    }
   }
 
   void load() {
@@ -114,6 +129,12 @@ class SchemaConf extends GetxController {
     for (var item in doc['schema_list']) {
       _schemaList.where((scheme) => scheme.name == item.values.first).first.active = true;
     }
+
+    var value = doc['menu']?['page_size'];
+    if (value != null) {
+      return;
+    }
+    this.pageSize = value.toString();
   }
 
   void save() {
