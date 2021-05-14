@@ -20,8 +20,8 @@ class _PinyinModeTabState extends State<PinyinModeTab> {
           init: widget.schema,
           builder: (c) {
             var speller = widget.schema.speller;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            return ListView(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('模糊音：', style: TextStyle(fontWeight: FontWeight.bold)),
                 Row(

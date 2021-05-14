@@ -157,9 +157,43 @@ class Schema extends GetxController {
       _switches.add(Switcher(item['name'], '["${v[0]}", "${v[1]}"]', reset: item['reset'] == 1));
     }
 
-    var spellerList = docPatch['speller/algebra'];
+    var spellerList = docPatch == null ? [] : docPatch['speller/algebra'];
     for (var item in spellerList) {
-      if (item == '') {}
+      switch (item) {
+        case 'derive/^ch/c/':
+          speller.cch = true;
+          break;
+        case 'derive/^sh/s/':
+          speller.ssh = true;
+          break;
+        case 'derive/^zh/z/':
+          speller.zzh = true;
+          break;
+
+        case 'derive/^l/n/':
+          speller.ln = true;
+          break;
+        case 'derive/^r/l/':
+          speller.rl = true;
+          break;
+        case 'derive/^f/h/':
+          speller.fh = true;
+          break;
+        // 韵母
+        case 'derive/an\$/ang/':
+          speller.anang = true;
+          break;
+        case 'derive/en\$/eng/':
+          speller.eneng = true;
+          break;
+        case 'derive/in\$/ing/':
+          speller.ining = true;
+          break;
+        // 简拼
+        case 'abbrev/^([a-z]).+\$/\$1/':
+          speller.abbrev = true;
+          break;
+      }
     }
 
     refresh();
