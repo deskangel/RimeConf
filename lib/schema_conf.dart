@@ -7,6 +7,90 @@ import 'package:yaml/yaml.dart';
 
 import 'utils/log_helper.dart';
 
+class Speller {
+  bool cch = false;
+  bool ssh = false;
+  bool zzh = false;
+  bool ln = false;
+  bool rl = false;
+  bool fh = false;
+  bool anang = false;
+  bool eneng = false;
+  bool ining = false;
+
+  bool abbrev = false;
+
+  String toYaml() {
+    String yaml = '';
+
+    String zcs = '';
+    if (cch) {
+      zcs += 'c';
+    }
+    if (ssh) {
+      zcs += 's';
+    }
+    if (zzh) {
+      zcs += 'z';
+    }
+
+    if (zcs.isNotEmpty) {
+      yaml += '''
+    - derive/^([$zcs])h/\$1/             # zh, ch, sh => z, c, s
+    - derive/^([$zcs])([^h])/\$1h\$2/     # z, c, s => zh, ch, sh
+      \n''';
+    }
+
+    if (ln) {
+      yaml += '''
+    - derive/^n/l/                     # n => l
+    - derive/^l/n/                     # l => n
+      \n''';
+    }
+
+    if (rl) {
+      yaml += '''
+    - derive/^r/l/                     # r => l
+    - derive/^l/r/                     # l => r
+      \n''';
+    }
+    if (fh) {
+      yaml += '''
+    - derive/^f/h/                     # f => h
+    - derive/^h/f/                     # h => f
+      \n''';
+    }
+
+    String aei = '';
+    if (anang) {
+      aei += 'a';
+    }
+    if (eneng) {
+      aei += 'e';
+    }
+    if (ining) {
+      aei += 'i';
+    }
+
+    if (aei.isNotEmpty) {
+      yaml += '''s
+    - derive/([$aei])n\$/\$1ng/            # an => ang, en => eng, in => ing
+    - derive/([$aei])ng\$/\$1n/            # ang => an, eng => en, ing => in
+      \n''';
+    }
+
+    if (abbrev) {
+      yaml += '''
+    # 模糊音定義先於簡拼定義，方可令簡拼支持以上模糊音
+    - abbrev/^([a-z]).+\$/\$1/           # 簡拼（首字母）
+    - abbrev/^([zcs]h).+\$/\$1/          # 簡拼（zh, ch, sh）
+      \n''';
+    }
+
+    return yaml;
+  }
+}
+
 class Switcher {
   final String name;
   final String states;
@@ -34,6 +118,9 @@ class Schema extends GetxController {
   List<Switcher> _switches = [];
 
   List<Switcher> get switches => _switches;
+
+  Speller _speller = Speller();
+  Speller get speller => _speller;
 
   Schema(this.name, {this.active: false}) {
     _pathDefault = join(DEFAULT_DIR, '${this.name}.schema.yaml');
@@ -99,36 +186,7 @@ $switcherList
     - erase/^xx\$/                      # 第一行保留
 
     # 模糊音定義
-    # 需要哪組就刪去行首的 # 號，單雙向任選
-    - derive/^([zcs])h/\$1/             # zh, ch, sh => z, c, s
-    - derive/^([zcs])([^h])/\$1h\$2/     # z, c, s => zh, ch, sh
-
-    - derive/^n/l/                     # n => l
-    - derive/^l/n/                     # l => n
-
-    # 這兩組一般是單向的
-    #- derive/^r/l/                     # r => l
-
-    #- derive/^ren/yin/                 # ren => yin, reng => ying
-    #- derive/^r/y/                     # r => y
-
-    # 下面 hu <=> f 這組寫法複雜一些，分情況討論
-    - derive/^hu\$/fu/                  # hu => fu
-    #- derive/^hong\$/feng/              # hong => feng
-    #- derive/^hu([in])\$/fe\$1/          # hui => fei, hun => fen
-    #- derive/^hu([ao])/f\$1/            # hua => fa, ...
-
-    - derive/^fu\$/hu/                  # fu => hu
-    #- derive/^feng\$/hong/              # feng => hong
-    #- derive/^fe([in])\$/hu\$1/          # fei => hui, fen => hun
-    #- derive/^f([ao])/hu\$1/            # fa => hua, ...
-
-    # 韻母部份
-    - derive/^([bpmf])eng\$/\$1ong/      # meng = mong, ...
-    - derive/([ei])n\$/\$1ng/            # en => eng, in => ing
-    - derive/([ei])ng\$/\$1n/            # eng => en, ing => in
-
-    # 樣例足夠了，其他請自己總結……
+${_speller.toYaml()}
 
     # 反模糊音？
     # 誰說方言沒有普通話精確、有模糊音，就能有反模糊音。
@@ -181,8 +239,8 @@ $switcherList
 
     logger.i(doc);
 
-    var file = File(_pathCustom);
-    file.writeAsString(doc);
+    // var file = File(_pathCustom);
+    // file.writeAsString(doc);
   }
 }
 

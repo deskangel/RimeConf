@@ -38,7 +38,7 @@ class _SchemeDetailPageState extends State<SchemeDetailPage> {
         body: TabBarView(
           children: [
             SwitcherTab(schema: widget.schema),
-            PinyinModeTab(),
+            PinyinModeTab(schema: widget.schema),
           ],
         ),
       ),
