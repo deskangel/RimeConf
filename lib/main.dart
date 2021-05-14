@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rimeconf/schema_conf.dart';
 import 'package:rimeconf/tabs/general_tab.dart';
-import 'package:rimeconf/tabs/scheme_list_tab.dart';
+import 'package:rimeconf/tabs/schema_list_tab.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();

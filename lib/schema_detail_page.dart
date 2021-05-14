@@ -28,7 +28,7 @@ class _SchemeDetailPageState extends State<SchemeDetailPage> {
       length: TABS.length,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.schema.name),
+          title: Text(widget.schema.id),
           bottom: TabBar(
             tabs: [
               for (var tab in TABS) Tab(text: tab),

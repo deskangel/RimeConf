@@ -111,7 +111,7 @@ class Switcher {
 
 class Schema extends GetxController {
   static const DEFAULT_DIR = '/usr/share/rime-data/';
-  final String name;
+  final String id;
   bool active;
 
   late final String _pathDefault;
@@ -124,12 +124,12 @@ class Schema extends GetxController {
   Speller _speller = Speller();
   Speller get speller => _speller;
 
-  Schema(this.name, {this.active: false}) {
-    _pathDefault = join(DEFAULT_DIR, '${this.name}.schema.yaml');
+  Schema(this.id, {this.active: false}) {
+    _pathDefault = join(DEFAULT_DIR, '${this.id}.schema.yaml');
 
     var home = getHomePath();
     assert(home != null, 'home cannot found.');
-    _pathCustom = join(home!, '.config/ibus/rime/', '${this.name}.custom.yaml');
+    _pathCustom = join(home!, '.config/ibus/rime/', '${this.id}.custom.yaml');
   }
 
   void load() {
@@ -206,7 +206,7 @@ class Schema extends GetxController {
     }
 
     String doc = '''
-# ${this.name}.custom.yaml
+# ${this.id}.custom.yaml
 # encoding: utf-8
 #
 # 部署位置：
@@ -368,7 +368,7 @@ class SchemaConf extends GetxController {
     }
 
     for (var item in doc['schema_list'] ?? []) {
-      _schemaList.where((scheme) => scheme.name == item.values.first).first.active = true;
+      _schemaList.where((scheme) => scheme.id == item.values.first).first.active = true;
     }
 
     var value = doc['menu']?['page_size'];
@@ -382,7 +382,7 @@ class SchemaConf extends GetxController {
     String usedSchemaList = '';
     for (var item in _schemaList) {
       if (item.active) {
-        usedSchemaList += '    - schema: ${item.name}\n';
+        usedSchemaList += '    - schema: ${item.id}\n';
       }
     }
 
