@@ -46,6 +46,7 @@ class _SchemaListTabState extends State<SchemaListTab> {
                     return ListTile(
                       dense: true,
                       title: Text(schema.id, style: TextStyle(fontSize: 16)),
+                      subtitle: Text(schema.name),
                       trailing: Switch(
                         value: schema.active,
                         onChanged: (bool value) {

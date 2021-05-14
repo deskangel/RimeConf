@@ -112,6 +112,7 @@ class Switcher {
 class Schema extends GetxController {
   static const DEFAULT_DIR = '/usr/share/rime-data/';
   final String id;
+  late String name;
   bool active;
 
   late final String _pathDefault;
@@ -127,9 +128,29 @@ class Schema extends GetxController {
   Schema(this.id, {this.active: false}) {
     _pathDefault = join(DEFAULT_DIR, '${this.id}.schema.yaml');
 
+    _retrieveName(_pathDefault);
+
     var home = getHomePath();
     assert(home != null, 'home cannot found.');
     _pathCustom = join(home!, '.config/ibus/rime/', '${this.id}.custom.yaml');
+  }
+
+  void _retrieveName(String path) {
+    var file = File(path);
+    if (!file.existsSync()) {
+      name = id;
+      return;
+    }
+
+    var content = file.readAsStringSync();
+    var doc = loadYaml(content);
+
+    if (doc['schema'] == null) {
+      name = id;
+      return;
+    }
+
+    name = doc['schema']['name'] ?? id;
   }
 
   void load() {
@@ -217,6 +238,8 @@ class Schema extends GetxController {
 # 於重新部署後生效
 
 patch:
+  schema/name: $name
+
   # 导入朙月拼音扩充词库
   "translator/dictionary": luna_pinyin.extended
   # 导入自定义符号
