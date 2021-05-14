@@ -42,20 +42,20 @@ class _PinyinModeTabState extends State<PinyinModeTab> {
                                 widget.schema.save();
                               }),
                           SwitchListTile(
-                              value: speller.zzh,
-                              title: Text('z <=> zh'),
-                              onChanged: (value) {
-                                setState(() {
-                                  speller.zzh = value;
-                                });
-                                widget.schema.save();
-                              }),
-                          SwitchListTile(
                               value: speller.ssh,
                               title: Text('s <=> sh'),
                               onChanged: (value) {
                                 setState(() {
                                   speller.ssh = value;
+                                });
+                                widget.schema.save();
+                              }),
+                          SwitchListTile(
+                              value: speller.zzh,
+                              title: Text('z <=> zh'),
+                              onChanged: (value) {
+                                setState(() {
+                                  speller.zzh = value;
                                 });
                                 widget.schema.save();
                               }),

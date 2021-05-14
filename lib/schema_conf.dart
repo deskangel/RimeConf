@@ -23,21 +23,22 @@ class Speller {
   String toYaml() {
     String yaml = '';
 
-    String zcs = '';
     if (cch) {
-      zcs += 'c';
+      yaml += '''
+    - derive/^ch/c/             # ch => c
+    - derive/^c/ch/             # c => ch
+      \n''';
     }
     if (ssh) {
-      zcs += 's';
+      yaml += '''
+    - derive/^sh/s/             # sh => s
+    - derive/^s/sh/             # s => sh
+      \n''';
     }
     if (zzh) {
-      zcs += 'z';
-    }
-
-    if (zcs.isNotEmpty) {
       yaml += '''
-    - derive/^([$zcs])h/\$1/             # zh, ch, sh => z, c, s
-    - derive/^([$zcs])([^h])/\$1h\$2/     # z, c, s => zh, ch, sh
+    - derive/^zh/z/             # zh => z
+    - derive/^z/zh/             # z => zh
       \n''';
     }
 
@@ -61,21 +62,22 @@ class Speller {
       \n''';
     }
 
-    String aei = '';
     if (anang) {
-      aei += 'a';
+      yaml += '''
+    - derive/an\$/ang/                     # an => ang
+    - derive/ang\$/an/                     # ang => an
+      \n''';
     }
     if (eneng) {
-      aei += 'e';
+      yaml += '''
+    - derive/en\$/eng/                     # en => eng
+    - derive/eng\$/en/                     # eng => en
+      \n''';
     }
     if (ining) {
-      aei += 'i';
-    }
-
-    if (aei.isNotEmpty) {
-      yaml += '''s
-    - derive/([$aei])n\$/\$1ng/            # an => ang, en => eng, in => ing
-    - derive/([$aei])ng\$/\$1n/            # ang => an, eng => en, ing => in
+      yaml += '''
+    - derive/in\$/ing/                     # in => ing
+    - derive/ing\$/in/                     # ing => in
       \n''';
     }
 
@@ -143,7 +145,10 @@ class Schema extends GetxController {
     var content = file.readAsStringSync();
     var doc = loadYaml(content);
 
-    var switchersMap = doc['switches'] ?? doc['patch']['switches'];
+    var docPatch = doc['patch'];
+
+    // if use the custom config file, doc['switches'] would be null
+    var switchersMap = doc['switches'] ?? docPatch?['switches'];
     assert(switchersMap != null, 'cannot find node patch nor switches');
 
     _switches.clear();
@@ -151,6 +156,12 @@ class Schema extends GetxController {
       YamlList v = item['states'];
       _switches.add(Switcher(item['name'], '["${v[0]}", "${v[1]}"]', reset: item['reset'] == 1));
     }
+
+    var spellerList = docPatch['speller/algebra'];
+    for (var item in spellerList) {
+      if (item == '') {}
+    }
+
     refresh();
   }
 
@@ -239,8 +250,8 @@ ${_speller.toYaml()}
 
     logger.i(doc);
 
-    // var file = File(_pathCustom);
-    // file.writeAsString(doc);
+    var file = File(_pathCustom);
+    file.writeAsString(doc);
   }
 }
 
